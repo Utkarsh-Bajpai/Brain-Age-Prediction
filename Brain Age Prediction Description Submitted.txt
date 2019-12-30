@@ -1,0 +1,17 @@
+Firstly, we impute median and then we remove outliers via std-deviation from mean. Then we impute outliers with mean and do standard scaling. Then we remove correlated features/features with no variance. Then we use lasso to identify useless features. Finally we train an elastic net on the remaining features with your own cross-validation function that shuffles data
+
+Our intermediate steps during research were as follows -
+(1) Filled missing values with mean
+(2) Removed outliers from all the columns (2.5 std criteria)
+(3) Scaled every features to 0 mean and 1 std
+(4) Removed variables which are correlated with any other variable (threshold 0.8)
+(5) Fitted an ElasticNet model (with alpha = 0.5, l1_ratio = 0.5)
+(6) Removed variables which had 0 coefficients in this model
+(7) Fitted a random forest regressor on remaining ones (estimators = 1000, max depth =15)
+
+
+I achieved my score through the gridsearch, the filename shows what I did:
+uv1e12: dropped all columns with a std > 1e12
+lv1e-8: dropped all columns with a std < 1e-8
+uc0.8 dropped columns with correlation > 0.8
+dev1.6: imputed values that are > 1.6 IQR from the median away with the mean (performed better than the median)
